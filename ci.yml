@@ -1,0 +1,46 @@
+name: 🚀 CI/CD Workflow
+
+on:
+  push:         # Déclenche quand tu pushes
+    branches: [ "main" ]
+  pull_request: # Déclenche sur une PR
+    branches: [ "main" ]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ Récupérer le code
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      # 2️⃣ Installer Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      # 3️⃣ Installer dépendances
+      - name: Install dependencies
+        run: npm install
+
+      # 4️⃣ Lancer les tests
+      - name: Run tests
+        run: npm test
+
+      # 5️⃣ Build du projet
+      - name: Build project
+        run: npm run build
+
+  deploy:
+    needs: build-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Deploy to Server (exemple)
+        run: echo "🚀 Déploiement terminé !"
